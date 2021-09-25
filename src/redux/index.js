@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-
+import logger from 'redux-logger'
 // Imports: Redux
 import rootReducer from "./reducers";
 // Middleware: Redux Persist Config
@@ -22,7 +22,7 @@ const persistConfig = {
   blacklist: ["UI"]
 };
 
-const middlewares = [thunk];
+const middlewares = [thunk, logger];
 // Middleware: Redux Persist Persisted Reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 // Redux: Store

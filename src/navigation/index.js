@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
@@ -7,6 +8,7 @@ import Login from "../screens/user/login";
 import Signup from "../screens/user/signup";
 import Feed from "../screens/feed";
 import Landing from "../screens/user/landing";
+import { useSelector } from "react-redux";
 
 const AppStack = createDrawerNavigator({
   Feed: {
@@ -36,10 +38,9 @@ const AuthStack = createStackNavigator(
   },
   {
     initialRouteName: "Landing",
-  }
+  },
 );
-
-export default createAppContainer(
+const NavigationContainer = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
@@ -48,6 +49,15 @@ export default createAppContainer(
     },
     {
       initialRouteName: "AuthLoading",
-    }
-  )
+    },
+  ),
 );
+
+const Navigation = () => {
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
+  useEffect(() => {}, [isLoggedIn]);
+  return <NavigationContainer />;
+};
+
+export default Navigation;

@@ -16,7 +16,7 @@ const AuthLoadingScreen = (props) => {
     // screen will be unmounted and thrown away.
     let boot = setTimeout(() => {
       props.navigation.navigate(userToken && user.isLoggedIn ? "App" : "Auth");
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(boot);
   };

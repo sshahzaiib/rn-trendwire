@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     fontSize: wp(15),
     color: "white",
     fontWeight: "300",
+    fontFamily: "Varela Round"
   },
   description: {
     marginTop: hp(10),
