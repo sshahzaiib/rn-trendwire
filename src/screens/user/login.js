@@ -1,5 +1,6 @@
+import PropTypes from "prop-types";
 import { ErrorMessage, Formik } from "formik";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Image,
   SafeAreaView,
@@ -17,6 +18,9 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/actions/authActions";
+import { CLEAR_ERRORS } from "../../redux/types";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const Layout = ({ children }) => {
@@ -39,6 +43,13 @@ const Layout = ({ children }) => {
   );
 };
 
+Layout.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+};
+
 const LoginSchema = Yup.object().shape({
   password: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
@@ -46,12 +57,21 @@ const LoginSchema = Yup.object().shape({
 
 const Login = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const toggleShowPassword = useCallback(() => {
     setShowPassword(s => !s);
   }, []);
   const _handleSubmit = (values, actions) => {
-    console.log(values);
+    dispatch(login(values, navigation));
   };
+
+  useEffect(() => {
+    return () =>
+      dispatch({
+        type: CLEAR_ERRORS,
+      });
+  }, [dispatch]);
   return (
     <Layout>
       <View style={styles.textContainer}>
@@ -132,11 +152,16 @@ const Login = ({ navigation }) => {
               <Text style={styles.errorText}>
                 <ErrorMessage name="email" />
               </Text>
+              {auth.errors && (
+                <Text style={styles.errorText}>{auth.errors.message}</Text>
+              )}
               <Button
                 uppercase={false}
                 mode="contained"
                 style={styles.loginBtn}
                 labelStyle={styles.loginBtnLabel}
+                loading={auth.loading}
+                disabled={auth.loading}
                 onPress={handleSubmit}>
                 Login
               </Button>
@@ -146,11 +171,17 @@ const Login = ({ navigation }) => {
         <Subheading
           onPress={() => navigation.navigate("Signup")}
           style={styles.subheading}>
-          Don't have an account? Create Account
+          Don&apos;t have an account? Create Account
         </Subheading>
       </View>
     </Layout>
   );
+};
+
+Login.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }),
 };
 
 const styles = StyleSheet.create({
@@ -198,9 +229,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   errorText: {
-    color: "#fff",
+    color: "red",
     textAlign: "right",
-    marginTop: 5,
+    marginTop: 2,
   },
 });
 

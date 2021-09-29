@@ -4,6 +4,7 @@ module.exports = {
     "@react-native-community",
     "eslint:recommended",
     "plugin:react-native/all",
+    "plugin:react/recommended",
   ],
   plugins: ["react", "react-native"],
   parserOptions: {

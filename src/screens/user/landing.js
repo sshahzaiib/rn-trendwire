@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import {
   ImageBackground,
@@ -24,7 +25,6 @@ const images = [
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
 
 const Landing = ({ navigation }) => {
   return (
@@ -60,6 +60,12 @@ const Landing = ({ navigation }) => {
   );
 };
 
+Landing.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }),
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -79,7 +85,7 @@ const styles = StyleSheet.create({
     fontSize: wp(15),
     color: "white",
     fontWeight: "300",
-    fontFamily: "Varela Round"
+    fontFamily: "Varela Round",
   },
   description: {
     marginTop: hp(10),
@@ -98,9 +104,6 @@ const styles = StyleSheet.create({
   explore: {
     borderRadius: 40,
     backgroundColor: "#fff",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
   },
   exploreLabel: {
     fontSize: wp(5),

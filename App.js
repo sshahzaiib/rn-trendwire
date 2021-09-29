@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import "react-native-gesture-handler";
-
+import { SafeAreaProvider } from "react-native-safe-area-context";
 // import axios from "axios";
 
 // Store and persist store
@@ -12,7 +12,7 @@ import { Provider } from "react-redux";
 // Redux Persist Gate for React
 import { PersistGate } from "redux-persist/lib/integration/react";
 
-import Navigation from './src/navigation'
+import Navigation from "./src/navigation";
 
 const theme = {
   ...DefaultTheme,
@@ -23,12 +23,14 @@ const theme = {
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <PaperProvider theme={theme}>
-          <Navigation />
-        </PaperProvider>
-      </PersistGate>
-    </Provider>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <PaperProvider theme={theme}>
+            <Navigation />
+          </PaperProvider>
+        </PersistGate>
+      </Provider>
+    </SafeAreaProvider>
   );
 }
