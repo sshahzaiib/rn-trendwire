@@ -19,7 +19,7 @@ const Feed = ({ navigation }) => {
     <SafeAreaView>
       <View>
         <Text>Text</Text>
-        <Button onPress={handleLogout}>Logout</Button>
+        <Button onPress={handleLogout}>Logosdfsdut</Button>
       </View>
     </SafeAreaView>
   );

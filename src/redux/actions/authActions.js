@@ -6,15 +6,17 @@ import {
   USER_LOGIN,
   USER_LOGOUT,
 } from "../types";
+import { navigate } from "../../utils/navigationService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const signup = (newUser, navigation) => dispatch => {
+export const signup = newUser => dispatch => {
   dispatch({ type: SET_AUTH_LOADING, payload: true });
   http
     .post("/auth/register", newUser)
     .then(async res => {
       dispatch({ type: SET_USER_DATA, payload: res.data });
       setTimeout(() => {
-        navigation.navigate("App");
+        navigate("App");
       }, 1000);
     })
     .catch(error => {
@@ -26,7 +28,7 @@ export const signup = (newUser, navigation) => dispatch => {
     });
 };
 
-export const login = (data, navigation) => dispatch => {
+export const login = data => dispatch => {
   dispatch({ type: SET_AUTH_LOADING, payload: true });
   http
     .post("/auth/login", data)
@@ -34,7 +36,7 @@ export const login = (data, navigation) => dispatch => {
       // return console.log(res.data);
       dispatch({ type: USER_LOGIN, payload: res.data });
       setTimeout(() => {
-        navigation.navigate("App");
+        navigate("App");
       }, 1000);
     })
     .catch(error => {
@@ -46,12 +48,48 @@ export const login = (data, navigation) => dispatch => {
     });
 };
 
+export const getAuthenticatedUserData = userId => dispatch => {
+  http
+    .get(`/users/${userId}/me`)
+    .then(res => {
+      dispatch({ type: SET_USER_DATA, payload: res.data });
+    })
+    .catch(error => {
+      console.error(error.response);
+    });
+};
+
+export const updateProfileImage = (userId, formData) => dispatch => {
+  http
+    .post(`/users/${userId}/me/updateProfileImage`, formData)
+    .then(({ data }) => {
+      dispatch({ type: SET_USER_DATA, payload: data });
+    })
+    .catch(error => {
+      console.error(error.response);
+    });
+};
+
+export const updateProfileData = (userId, data, showToast) => dispatch => {
+  dispatch({ type: SET_AUTH_LOADING, payload: true });
+  http
+    .patch(`/users/${userId}/me`, data)
+    .then(res => {
+      dispatch({ type: SET_USER_DATA, payload: res.data });
+      showToast();
+    })
+    .catch(error => {
+      dispatch({ type: SET_AUTH_LOADING, payload: false });
+      console.error(error.response);
+    });
+};
+
 // Logout action
-export const logout = (data, navigation) => async dispatch => {
-  // await AsyncStorage.clear();
-  await http.post("/auth/logout", data);
+export const logout = data => async dispatch => {
+  await AsyncStorage.clear();
   dispatch({
     type: USER_LOGOUT,
   });
-  navigation.navigate("Auth");
+  navigate("Auth");
+  http.post("/auth/logout", data);
 };

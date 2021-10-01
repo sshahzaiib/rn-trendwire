@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AnimatedLoader from "react-native-animated-loader";
 import { http } from "../utils/config";
+import { getAuthenticatedUserData } from "../redux/actions/authActions";
 const AuthLoadingScreen = props => {
   const user = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   useEffect(() => {
     _bootstrapAsync();
   }, [_bootstrapAsync]);
@@ -13,26 +15,11 @@ const AuthLoadingScreen = props => {
   const _bootstrapAsync = useCallback(async () => {
     const userToken = user.credentials?.tokens?.access?.token || null;
     let interceptor;
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    let boot = setTimeout(() => {
-      props.navigation.navigate(userToken && user.isLoggedIn ? "App" : "Auth");
-    }, 2000);
-
-    http.interceptors.request.use(
-      config => {
-        console.log(config);
-        return config;
-      },
-      null,
-      { synchronous: true },
-    );
 
     if (userToken && user.isLoggedIn) {
       interceptor = http.interceptors.request.use(
         config => {
           config.headers.Authorization = `Bearer ${userToken}`;
-          console.log(config);
           return config;
         },
         null,
@@ -41,10 +28,20 @@ const AuthLoadingScreen = props => {
     } else if (interceptor) {
       http.interceptors.request.eject(interceptor);
     }
+
+    // This will switch to the App screen or Auth screen and this loading
+    // screen will be unmounted and thrown away.
+    let boot = setTimeout(() => {
+      let userId = user.credentials?.user?.id;
+      dispatch(getAuthenticatedUserData(userId));
+      props.navigation.navigate(userToken && user.isLoggedIn ? "App" : "Auth");
+    }, 2000);
     return () => clearTimeout(boot);
   }, [
+    dispatch,
     props.navigation,
     user.credentials?.tokens?.access?.token,
+    user.credentials?.user?.id,
     user.isLoggedIn,
   ]);
 

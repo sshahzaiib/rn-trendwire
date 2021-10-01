@@ -36,9 +36,12 @@ export default function (state = initialState, { type, payload }) {
       });
     case SET_USER_DATA:
       return Object.assign({}, state, {
-        isLoading: true,
+        isLoading: false,
         credentials: {
-          ...payload,
+          ...state.credentials,
+          user: {
+            ...payload,
+          },
         },
         loading: false,
         errors: false,

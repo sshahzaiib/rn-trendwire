@@ -13,11 +13,14 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 
 import Navigation from "./src/navigation";
+import navigationService from "./src/utils/navigationService";
 
 const theme = {
   ...DefaultTheme,
+  roundness: 3,
   colors: {
     ...DefaultTheme.colors,
+    primary: "#fff",
   },
 };
 
@@ -27,7 +30,11 @@ export default function App() {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <PaperProvider theme={theme}>
-            <Navigation />
+            <Navigation
+              ref={navigatorRef =>
+                navigationService.setTopLevelNavigator(navigatorRef)
+              }
+            />
           </PaperProvider>
         </PersistGate>
       </Provider>

@@ -57,7 +57,7 @@ const SignupSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
 });
 
-const Login = ({ navigation }) => {
+const Signup = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
@@ -200,7 +200,7 @@ const Login = ({ navigation }) => {
   );
 };
 
-Login.propTypes = {
+Signup.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
   }),
@@ -253,4 +253,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Signup;
