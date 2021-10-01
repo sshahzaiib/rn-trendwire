@@ -145,7 +145,7 @@ const UpdateProfile = () => {
                   },
                 }}
                 underlineColor="#000"
-                selectionColor="white"
+                selectionColor="#000"
                 error={errors.name && touched.name}
                 onChangeText={handleChange("name")}
                 onBlur={handleBlur("name")}
@@ -167,7 +167,7 @@ const UpdateProfile = () => {
                   },
                 }}
                 underlineColor="#000"
-                selectionColor="white"
+                selectionColor="#000"
                 error={errors.contactNo && touched.contactNo}
                 onChangeText={handleChange("contactNo")}
                 onBlur={handleBlur("contactNo")}
@@ -190,7 +190,7 @@ const UpdateProfile = () => {
                   },
                 }}
                 underlineColor="#000"
-                selectionColor="white"
+                selectionColor="#000"
                 error={errors.address && touched.address}
                 onChangeText={handleChange("address")}
                 onBlur={handleBlur("address")}
@@ -256,6 +256,8 @@ const styles = StyleSheet.create({
     top: 110,
     right: 110,
     fontSize: 30,
+    backgroundColor: "#fff",
+    borderRadius: 6,
   },
 });
 
