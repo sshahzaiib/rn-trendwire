@@ -21,11 +21,15 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import { CLEAR_ERRORS } from "../../redux/types";
+import { navigate } from "../../utils/navigationService";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const Layout = ({ children }) => {
   return (
     <View style={styles.container}>
+      <Text onPress={() => navigate("App")} style={styles.skip}>
+        Skip
+      </Text>
       <Image
         blurRadius={3}
         source={require("../../assets/images/pexels-kaitlyn-jade-2063102.jpg")}
@@ -189,6 +193,15 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     flex: 1,
     justifyContent: "space-around",
+  },
+  skip: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 1,
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "300",
   },
   image: {
     height: screenHeight,

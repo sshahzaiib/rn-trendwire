@@ -26,49 +26,59 @@ const Account = ({ navigation }) => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.info}>
-            <Avatar.Image
-              style={styles.avatar}
-              size={50}
-              source={{ uri: user?.profileImg }}
-            />
-            <View>
-              <Headline>{user?.name}</Headline>
-              <Caption>{user?.email}</Caption>
+        {!!user ? (
+          <View style={styles.container}>
+            <View style={styles.info}>
+              <Avatar.Image
+                style={styles.avatar}
+                size={50}
+                source={{ uri: user?.profileImg }}
+              />
+              <View>
+                <Headline>{user?.name}</Headline>
+                <Caption>{user?.email}</Caption>
+              </View>
             </View>
+            <View style={{ marginTop: heightPercentageToDP(4) }} />
+            <ListItem
+              title="Update Profile"
+              onPress={() => navigate("UpdateProfile")}
+            />
+            <ListItem
+              title="My Orders"
+              onPress={() => handleNavigate("MyOrders")}
+            />
+            <ListItem
+              title="My Reviews"
+              onPress={() => handleNavigate("MyReviews")}
+            />
+            <ListItem
+              disabled={!user?.isEmailVerified}
+              description={
+                !user?.isEmailVerified
+                  ? "Check your mail box to verify your email first!"
+                  : null
+              }
+              title="Change Password"
+              onPress={() => navigate("ChangePassword")}
+            />
+            <Button
+              mode="contained"
+              style={styles.logoutBtn}
+              labelStyle={styles.logoutBtnLabel}
+              onPress={handleLogout}>
+              <Icon size={16} name="logout" /> Logout
+            </Button>
           </View>
-          <View style={{ marginTop: heightPercentageToDP(4) }} />
-          <ListItem
-            title="Update Profile"
-            onPress={() => navigate("UpdateProfile")}
-          />
-          <ListItem
-            title="My Orders"
-            onPress={() => handleNavigate("MyOrders")}
-          />
-          <ListItem
-            title="My Reviews"
-            onPress={() => handleNavigate("MyReviews")}
-          />
-          <ListItem
-            disabled={!user?.isEmailVerified}
-            description={
-              !user?.isEmailVerified
-                ? "Check your mail box to verify your email first!"
-                : null
-            }
-            title="Change Password"
-            onPress={() => navigate("ChangePassword")}
-          />
+        ) : (
           <Button
             mode="contained"
-            style={styles.logoutBtn}
-            labelStyle={styles.logoutBtnLabel}
-            onPress={handleLogout}>
-            <Icon size={16} name="logout" /> Logout
+            style={styles.signinBtn}
+            labelStyle={styles.signinLblBtn}
+            onPress={() => navigate("Signin")}>
+            <Icon size={16} name="login" /> Login
           </Button>
-        </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -99,6 +109,19 @@ const styles = StyleSheet.create({
     marginBottom: heightPercentageToDP(8),
   },
   logoutBtnLabel: {
+    fontSize: 18,
+    color: "#fff",
+  },
+  signinBtn: {
+    borderRadius: 40,
+    backgroundColor: "#121212",
+    height: 50,
+    justifyContent: "center",
+    marginTop: widthPercentageToDP(3),
+    width: widthPercentageToDP(90),
+    alignSelf: "center",
+  },
+  signinLblBtn: {
     fontSize: 18,
     color: "#fff",
   },

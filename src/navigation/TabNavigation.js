@@ -41,7 +41,6 @@ export default createMaterialBottomTabNavigator(
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        // TODO: Update icon upon focus
         if (routeName === "Home") {
           iconName = focused ? "ios-home-sharp" : "ios-home-outline";
         } else if (routeName === "Account") {
@@ -57,6 +56,6 @@ export default createMaterialBottomTabNavigator(
       backgroundColor: "#fff",
     },
     backBehavior: "order",
-    initialRouteName: "Account",
+    initialRouteName: "Home",
   },
 );
