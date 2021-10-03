@@ -52,8 +52,14 @@ const Account = ({ navigation }) => {
             onPress={() => handleNavigate("MyReviews")}
           />
           <ListItem
+            disabled={!user?.isEmailVerified}
+            description={
+              !user?.isEmailVerified
+                ? "Check your mail box to verify your email first!"
+                : null
+            }
             title="Change Password"
-            onPress={() => handleNavigate("ChangePassword")}
+            onPress={() => navigate("ChangePassword")}
           />
           <Button
             mode="contained"

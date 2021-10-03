@@ -6,6 +6,7 @@ import { createMaterialBottomTabNavigator } from "react-navigation-material-bott
 import Account from "../screens/account";
 import { createStackNavigator } from "react-navigation-stack";
 import UpdateProfile from "../screens/account/updateProfile";
+import ChangePassword from "../screens/account/changePassword";
 
 const navigationOptions = {
   headerShown: false,
@@ -18,6 +19,10 @@ const AccountStack = createStackNavigator(
     },
     UpdateProfile: {
       screen: UpdateProfile,
+      navigationOptions,
+    },
+    ChangePassword: {
+      screen: ChangePassword,
       navigationOptions,
     },
   },

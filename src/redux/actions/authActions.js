@@ -84,6 +84,18 @@ export const updateProfileData = (userId, data, showToast) => dispatch => {
     });
 };
 
+export const changePassword = (data, showToast) => dispatch => {
+  http
+    .patch(`/auth/change-password`, data)
+    .then(res => {
+      showToast("Password Updated!");
+    })
+    .catch(error => {
+      showToast("Something went wrong. Please try again.");
+      console.error(error.response);
+    });
+};
+
 // Logout action
 export const logout = data => async dispatch => {
   await AsyncStorage.clear();
