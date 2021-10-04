@@ -26,7 +26,7 @@ const Account = ({ navigation }) => {
   return (
     <SafeAreaView>
       <ScrollView>
-        {!!user ? (
+        {user ? (
           <View style={styles.container}>
             <View style={styles.info}>
               <Avatar.Image

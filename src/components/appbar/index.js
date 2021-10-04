@@ -8,6 +8,7 @@ import FWIcon from "react-native-vector-icons/SimpleLineIcons";
 
 const AppBar = ({ title, showMenu, noBackAction }) => {
   const _handleSearch = () => console.log("Searching");
+  const auth = useSelector(state => state.auth);
 
   const user = useSelector(state => state.auth.credentials?.user);
   return (
@@ -23,20 +24,24 @@ const AppBar = ({ title, showMenu, noBackAction }) => {
             color="#555"
             onPress={_handleSearch}
           />
-          <FWIcon
-            color="#555"
-            name="handbag"
-            size={20}
-            style={styles.cartIcon}
-            onPress={_handleSearch}
-          />
-          <Pressable onPress={() => navigate("Account")}>
-            <Avatar.Image
-              size={28}
-              source={{ uri: user?.profileImg }}
-              style={styles.avatar}
-            />
-          </Pressable>
+          {auth.isLoggedIn && (
+            <>
+              <FWIcon
+                color="#555"
+                name="handbag"
+                size={20}
+                style={styles.cartIcon}
+                onPress={_handleSearch}
+              />
+              <Pressable onPress={() => navigate("Account")}>
+                <Avatar.Image
+                  size={28}
+                  source={{ uri: user?.profileImg }}
+                  style={styles.avatar}
+                />
+              </Pressable>
+            </>
+          )}
         </>
       )}
     </RNPAppbar.Header>

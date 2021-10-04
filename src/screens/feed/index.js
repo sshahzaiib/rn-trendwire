@@ -1,26 +1,28 @@
 import PropTypes from "prop-types";
-import { Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "react-native-paper";
-import { useDispatch } from "react-redux";
-import { logout } from "../../redux/actions/authActions";
-import { useSelector } from "react-redux";
+import ProductCard from "../../components/ProductCard";
+import { FlatGrid } from "react-native-super-grid";
+import AppBar from "../../components/appbar";
+import { widthPercentageToDP } from "react-native-responsive-screen";
 
-const Feed = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const refreshToken = useSelector(
-    state => state.auth.credentials?.tokens?.refresh?.token,
-  );
+let arr = [1, 2, 3, 5, 6, 7, 2, 3, 5, 6, 7];
 
-  const handleLogout = () => dispatch(logout({ refreshToken }, navigation));
-  // const handleLogout = () => navigation.navigate("Auth");
+const Feed = () => {
   return (
-    <SafeAreaView>
-      <View>
-        <Text>Text</Text>
-        <Button onPress={handleLogout}>Logosdfsdut</Button>
-      </View>
+    <SafeAreaView style={{ marginBottom: 55 }}>
+      <AppBar noBackAction title="Explore" />
+      <FlatGrid
+        style={styles.gridView}
+        data={arr}
+        staticDimension={widthPercentageToDP(97)}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <ProductCard />
+          </View>
+        )}
+      />
     </SafeAreaView>
   );
 };
@@ -28,5 +30,11 @@ const Feed = ({ navigation }) => {
 Feed.propTypes = {
   navigation: PropTypes.any,
 };
+
+const styles = StyleSheet.create({
+  gridView: {
+    marginLeft: 5,
+  },
+});
 
 export default Feed;
