@@ -54,6 +54,7 @@ export default function (state = initialState, { type, payload }) {
     case CLEAR_ERRORS:
       return Object.assign({}, state, {
         errors: {},
+        loading: false,
       });
     case USER_LOGOUT:
       return initialState;
