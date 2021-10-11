@@ -6,11 +6,18 @@ import {
   SET_AUTH_LOADING,
   SET_AUTH_ERRORS,
   CLEAR_ERRORS,
+  SET_FAVORITE,
+  ADD_TO_CART,
 } from "../types";
 
 const initialState = {
   isLoggedIn: false,
-  credentials: {},
+  credentials: {
+    user: {
+      favorites: [],
+      cart: [],
+    },
+  },
   loading: false,
   errors: {},
 };
@@ -56,6 +63,28 @@ export default function (state = initialState, { type, payload }) {
         errors: {},
         loading: false,
       });
+    case SET_FAVORITE: {
+      return Object.assign({}, state, {
+        credentials: {
+          ...state.credentials,
+          user: {
+            ...state.credentials.user,
+            favorites: [...payload],
+          },
+        },
+      });
+    }
+    case ADD_TO_CART: {
+      return Object.assign({}, state, {
+        credentials: {
+          ...state.credentials,
+          user: {
+            ...state.credentials.user,
+            cart: [...payload],
+          },
+        },
+      });
+    }
     case USER_LOGOUT:
       return initialState;
     default:

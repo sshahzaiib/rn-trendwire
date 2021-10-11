@@ -1,6 +1,6 @@
 import { ADD_TO_CART } from "../types";
 
-export const addToCart = id => ({
+export const addToCart = data => ({
   type: ADD_TO_CART,
-  payload: id,
+  payload: data,
 });

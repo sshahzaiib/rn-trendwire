@@ -76,7 +76,7 @@ export const updateProfileData = (userId, data, showToast) => dispatch => {
     .patch(`/users/${userId}/me`, data)
     .then(res => {
       dispatch({ type: SET_USER_DATA, payload: res.data });
-      showToast();
+      showToast && showToast();
     })
     .catch(error => {
       dispatch({ type: SET_AUTH_LOADING, payload: false });

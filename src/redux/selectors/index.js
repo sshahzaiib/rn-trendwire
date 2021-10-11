@@ -4,4 +4,13 @@ export const useIsLoggedInSelector = () =>
   useSelector(state => state.auth.isLoggedIn);
 
 export const useCartItemsCount = () =>
-  useSelector(state => state.cart.selected.length);
+  useSelector(state => state.auth.credentials?.user?.cart.length ?? 0);
+
+export const useCartItemsSelector = () =>
+  useSelector(state => state.auth.credentials?.user?.cart ?? []);
+
+export const useFavoritesSelector = () =>
+  useSelector(state => state.auth.credentials?.user?.favorites ?? []);
+
+export const useUserIdSelector = () =>
+  useSelector(state => state.auth.credentials?.user?.id);

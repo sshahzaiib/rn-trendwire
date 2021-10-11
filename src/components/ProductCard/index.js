@@ -8,30 +8,52 @@ import {
 } from "react-native-responsive-screen";
 import FWIcon from "react-native-vector-icons/SimpleLineIcons";
 import MCIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setFavorite } from "../../redux/actions/productActions";
 import { addToCart } from "../../redux/actions/cartActions";
-import { useIsLoggedInSelector } from "../../redux/selectors";
+import {
+  useCartItemsSelector,
+  useFavoritesSelector,
+  useIsLoggedInSelector,
+  useUserIdSelector,
+} from "../../redux/selectors";
+import { updateProfileData } from "../../redux/actions/authActions";
+import { uniq } from "lodash-es";
 const { width } = Dimensions.get("window");
 
 const ProductCard = ({ data }) => {
   const dispatch = useDispatch();
-  const favorites = useSelector(state => state.products.favorites);
-  const cartList = useSelector(state => state.cart.selected);
+  const favorites = useFavoritesSelector();
+  const cartList = useCartItemsSelector();
   const isLoggedIn = useIsLoggedInSelector();
+  const userId = useUserIdSelector();
 
   const handleFavorite = React.useCallback(
     id => {
-      dispatch(setFavorite(id));
+      let selected = [...favorites];
+      if (selected.includes(id)) {
+        selected.splice(selected.indexOf(id), 1);
+      } else {
+        selected = uniq([...selected, id]);
+      }
+      dispatch(setFavorite(selected));
+      dispatch(updateProfileData(userId, { favorites: selected }));
     },
-    [dispatch],
+    [dispatch, favorites, userId],
   );
 
   const handleAddToCart = React.useCallback(
     id => {
-      dispatch(addToCart(id));
+      let selected = [...cartList];
+      if (selected.includes(id)) {
+        selected.splice(selected.indexOf(id), 1);
+      } else {
+        selected = uniq([...selected, id]);
+      }
+      dispatch(addToCart(selected));
+      isLoggedIn && dispatch(updateProfileData(userId, { cart: selected }));
     },
-    [dispatch],
+    [cartList, dispatch, isLoggedIn, userId],
   );
 
   return (
@@ -47,31 +69,30 @@ const ProductCard = ({ data }) => {
             uri: data?.images[0],
           }}
         />
-        {isLoggedIn && (
-          <View
-            style={{
-              position: "absolute",
-              top: 10,
-              right: 10,
-              backgroundColor: "white",
-              borderRadius: 50,
-              padding: 4,
-              zIndex: 100,
-            }}>
-            <Pressable
-              android_ripple={{
-                color: "pink",
-                borderless: true,
-              }}
-              onPress={() => handleFavorite(data.id)}>
-              <MCIcon
-                size={20}
-                color="red"
-                name={favorites.includes(data.id) ? "heart" : "heart-outline"}
-              />
-            </Pressable>
-          </View>
-        )}
+        <View
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            backgroundColor: "white",
+            borderRadius: 50,
+            padding: 4,
+            zIndex: 100,
+          }}>
+          <Pressable
+            disabled={!isLoggedIn}
+            android_ripple={{
+              color: "pink",
+              borderless: true,
+            }}
+            onPress={() => handleFavorite(data.id)}>
+            <MCIcon
+              size={20}
+              color="red"
+              name={favorites.includes(data.id) ? "heart" : "heart-outline"}
+            />
+          </Pressable>
+        </View>
         <View style={{ position: "absolute", bottom: 50, width: "100%" }}>
           <View style={{ width: "100%" }}>
             <View

@@ -2,15 +2,15 @@ import PropTypes from "prop-types";
 import useAxios from "axios-hooks";
 import React, { useEffect } from "react";
 import { FlatList } from "react-native";
-import { useSelector } from "react-redux";
 import ProductCard from "../../components/ProductCard";
 import CardSkeleton from "../feed/CardSkeleton";
 import NoResults from "../../components/NoResults";
 import { isEmpty } from "lodash-es";
 import { withNavigationFocus } from "react-navigation";
+import { useCartItemsSelector } from "../../redux/selectors";
 
 const Products = ({ isFocused }) => {
-  const cartItems = useSelector(state => state.cart.selected);
+  const cartItems = useCartItemsSelector();
 
   const [{ data, loading, error }, _init] = useAxios(
     {

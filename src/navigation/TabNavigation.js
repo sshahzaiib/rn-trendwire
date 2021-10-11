@@ -15,6 +15,7 @@ import Cart from "../screens/cart";
 import FWIcon from "react-native-vector-icons/SimpleLineIcons";
 import { useSelector } from "react-redux";
 import { Text, View } from "react-native";
+import { useCartItemsCount } from "../redux/selectors";
 
 const navigationOptions = {
   headerShown: false,
@@ -73,7 +74,7 @@ export default createMaterialBottomTabNavigator(
   {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        const count = useSelector(state => state.cart.selected.length);
+        const count = useCartItemsCount();
         const auth = useSelector(state => state.auth);
         const { routeName } = navigation.state;
 

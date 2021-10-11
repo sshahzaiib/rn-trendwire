@@ -1,5 +1,5 @@
 import { uniqBy } from "lodash";
-import { CLEAR_PRODUCTS, SET_FAVORITE, SET_PRODUCTS } from "../types";
+import { CLEAR_PRODUCTS, SET_PRODUCTS } from "../types";
 
 const initialState = {
   data: {
@@ -10,16 +10,12 @@ const initialState = {
     limit: 10,
     presentItems: 0,
   },
-  favorites: [],
 };
-
-let favorites;
-let products;
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case SET_PRODUCTS:
-      products = uniqBy([...state.data.results, ...payload.results], "id");
+    case SET_PRODUCTS: {
+      let products = uniqBy([...state.data.results, ...payload.results], "id");
       return Object.assign({}, state, {
         data: {
           ...payload,
@@ -27,21 +23,12 @@ export default (state = initialState, { type, payload }) => {
           presentItems: products.length,
         },
       });
+    }
     case CLEAR_PRODUCTS:
       return Object.assign({}, state, {
         data: {
           ...initialState.data,
         },
-      });
-    case SET_FAVORITE:
-      favorites = [...state.favorites];
-      if (favorites.includes(payload)) {
-        favorites.splice(favorites.indexOf(payload), 1);
-      } else {
-        favorites = [...favorites, payload];
-      }
-      return Object.assign({}, state, {
-        favorites: [...favorites],
       });
     default:
       return state;
