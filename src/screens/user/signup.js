@@ -69,6 +69,9 @@ const Signup = ({ navigation }) => {
   };
 
   useEffect(() => {
+    dispatch({
+      type: CLEAR_ERRORS,
+    });
     return () =>
       dispatch({
         type: CLEAR_ERRORS,

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import PropTypes from "prop-types";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 // import MTIcon from "react-native-vector-icon/MaterialCommunityIcons";
@@ -7,6 +9,12 @@ import Account from "../screens/account";
 import { createStackNavigator } from "react-navigation-stack";
 import UpdateProfile from "../screens/account/updateProfile";
 import ChangePassword from "../screens/account/changePassword";
+import { store } from "../redux";
+import Favorites from "../screens/favorites";
+import Cart from "../screens/cart";
+import FWIcon from "react-native-vector-icons/SimpleLineIcons";
+import { useSelector } from "react-redux";
+import { Text, View } from "react-native";
 
 const navigationOptions = {
   headerShown: false,
@@ -33,20 +41,67 @@ const AccountStack = createStackNavigator(
 
 export default createMaterialBottomTabNavigator(
   {
-    Home: Feed,
-    Account: AccountStack,
+    Home: {
+      screen: Feed,
+    },
+    Favorites: {
+      screen: Favorites,
+      navigationOptions: {
+        tabBarOnPress: ({ navigation }) => {
+          if (store.getState().auth.isLoggedIn) {
+            navigation.navigate("Favorites");
+          }
+        },
+      },
+    },
+    Cart: {
+      screen: Cart,
+    },
+    Account: {
+      screen: AccountStack,
+      navigationOptions: {
+        tabBarOnPress: ({ navigation }) => {
+          if (store.getState().auth.isLoggedIn) {
+            navigation.navigate("Account");
+          } else {
+            navigation.navigate("Signin");
+          }
+        },
+      },
+    },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const count = useSelector(state => state.cart.selected.length);
+        const auth = useSelector(state => state.auth);
         const { routeName } = navigation.state;
-        let iconName;
+
+        let iconName = "ios-person-circle-sharp";
         if (routeName === "Home") {
           iconName = focused ? "ios-home-sharp" : "ios-home-outline";
         } else if (routeName === "Account") {
           iconName = focused
             ? "ios-person-circle-sharp"
             : "ios-person-circle-outline";
+          return (
+            <IconWithBadge
+              badgeCount={
+                auth.isLoggedIn && !auth.credentials?.user?.isEmailVerified
+                  ? 1
+                  : 0
+              }>
+              <Ionicons name={iconName} size={25} color={tintColor} />
+            </IconWithBadge>
+          );
+        } else if (routeName === "Favorites") {
+          iconName = focused ? "heart" : "heart-outline";
+        } else if (routeName === "Cart") {
+          return (
+            <IconWithBadge badgeCount={count}>
+              <FWIcon color={tintColor} name="handbag" size={20} />
+            </IconWithBadge>
+          );
         }
         // You can return any component that you like here!
         return <Ionicons name={iconName} size={25} color={tintColor} />;
@@ -57,5 +112,37 @@ export default createMaterialBottomTabNavigator(
     },
     backBehavior: "order",
     initialRouteName: "Home",
+    shifting: true,
   },
 );
+
+const IconWithBadge = ({ badgeCount, children }) => {
+  return (
+    <View style={{ width: 24, height: 24 }}>
+      {children}
+      {badgeCount > 0 && (
+        <View
+          style={{
+            position: "absolute",
+            right: -6,
+            top: -5,
+            backgroundColor: "red",
+            borderRadius: 6,
+            width: 14,
+            height: 14,
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <Text style={{ color: "white", fontSize: 11, fontWeight: "bold" }}>
+            {badgeCount}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+IconWithBadge.propTypes = {
+  badgeCount: PropTypes.number,
+  children: PropTypes.node,
+};

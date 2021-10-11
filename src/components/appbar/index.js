@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { Appbar as RNPAppbar, Avatar } from "react-native-paper";
+import { Appbar as RNPAppbar, Avatar, Button } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { goBack, navigate } from "../../utils/navigationService";
-import FWIcon from "react-native-vector-icons/SimpleLineIcons";
 
 const AppBar = ({ title, showMenu, noBackAction }) => {
   const _handleSearch = () => console.log("Searching");
@@ -24,23 +23,20 @@ const AppBar = ({ title, showMenu, noBackAction }) => {
             color="#555"
             onPress={_handleSearch}
           />
-          {auth.isLoggedIn && (
-            <>
-              <FWIcon
-                color="#555"
-                name="handbag"
-                size={20}
-                style={styles.cartIcon}
-                onPress={_handleSearch}
+          {auth.isLoggedIn ? (
+            <Pressable onPress={() => navigate("Account")}>
+              <Avatar.Image
+                size={28}
+                source={{ uri: user?.profileImg }}
+                style={styles.avatar}
               />
-              <Pressable onPress={() => navigate("Account")}>
-                <Avatar.Image
-                  size={28}
-                  source={{ uri: user?.profileImg }}
-                  style={styles.avatar}
-                />
-              </Pressable>
-            </>
+            </Pressable>
+          ) : (
+            <Button
+              onPress={() => navigate("Signin")}
+              labelStyle={{ color: "#000" }}>
+              Login
+            </Button>
           )}
         </>
       )}
@@ -56,9 +52,6 @@ const styles = StyleSheet.create({
   },
   avatar: {
     marginEnd: 20,
-  },
-  cartIcon: {
-    marginRight: 15,
   },
 });
 

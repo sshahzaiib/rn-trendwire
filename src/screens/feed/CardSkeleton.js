@@ -1,17 +1,16 @@
+import { uniqueId } from "lodash-es";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { widthPercentageToDP } from "react-native-responsive-screen";
+import { Dimensions, FlatList, View } from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { FlatGrid } from "react-native-super-grid";
 
 const CardSkeleton = () => {
   return (
-    <FlatGrid
-      style={styles.gridView}
-      data={[1, 2, 3, 5, 6]}
-      staticDimension={widthPercentageToDP(97)}
+    <FlatList
+      numColumns={2}
+      horizontal={false}
+      data={[...Array(10)].map((_, i) => uniqueId())}
       renderItem={({ item }) => (
-        <View style={styles.itemContainer}>
+        <View style={{ width: Dimensions.get("window").width / 2, padding: 5 }}>
           <SkeletonPlaceholder speed={1000}>
             <SkeletonPlaceholder.Item height={150} borderRadius={4} />
             <SkeletonPlaceholder.Item
@@ -25,10 +24,5 @@ const CardSkeleton = () => {
     />
   );
 };
-const styles = StyleSheet.create({
-  gridView: {
-    marginLeft: 5,
-  },
-});
 
 export default CardSkeleton;

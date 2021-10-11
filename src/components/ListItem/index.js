@@ -12,6 +12,9 @@ const ListItem = ({ title, onPress, disabled, description }) => (
       elevation: 3,
       borderRadius: 8,
     }}
+    descriptionStyle={{
+      color: "red",
+    }}
     onPress={onPress}
     title={title}
     description={description}

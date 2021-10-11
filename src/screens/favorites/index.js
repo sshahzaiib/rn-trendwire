@@ -1,17 +1,15 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppBar from "../../components/appbar";
-import Categories from "./Categories";
 import Products from "./Products";
 
-const Feed = () => {
+const Favorites = () => {
   return (
     <SafeAreaView>
-      <AppBar noBackAction title="Explore" />
-      <Categories />
+      <AppBar noBackAction title="Favorites" />
       <Products />
     </SafeAreaView>
   );
 };
 
-export default Feed;
+export default Favorites;

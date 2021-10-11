@@ -16,12 +16,15 @@ const persistConfig = {
   // State reconciler
   // stateReconciler: autoMergeLevel2,
   // Whitelist (Save Specific Reducers)
-  whitelist: ["auth"],
-  // Blacklist (Don't Save Specific Reducers)
-  blacklist: ["UI"],
+  blacklist: ["categories", "UI", "products"],
 };
 
 const middlewares = [thunk, logger];
+
+if (__DEV__) {
+  const createDebugger = require("redux-flipper").default;
+  middlewares.push(createDebugger());
+}
 // Middleware: Redux Persist Persisted Reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 // Redux: Store

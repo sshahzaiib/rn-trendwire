@@ -46,7 +46,8 @@ Layout.propTypes = {
 
 const validationSchema = Yup.object().shape({
   password: Yup.string().required("Required").label("Password").min(8),
-  confirmPassword: Yup.string("Required")
+  confirmPassword: Yup.string()
+    .required("Required")
     .label("Confirm Password")
     .oneOf([Yup.ref("password"), null], "Passwords do not match"),
 });

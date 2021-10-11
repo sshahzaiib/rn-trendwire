@@ -56,7 +56,7 @@ const Account = ({ navigation }) => {
               disabled={!user?.isEmailVerified}
               description={
                 !user?.isEmailVerified
-                  ? "Check your mail box to verify your email first!"
+                  ? "Please check your mail box to verify your email!"
                   : null
               }
               title="Change Password"

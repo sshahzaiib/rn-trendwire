@@ -15,6 +15,8 @@ import { PersistGate } from "redux-persist/lib/integration/react";
 import Navigation from "./src/navigation";
 import navigationService from "./src/utils/navigationService";
 
+import noConsole from "no-console";
+
 const theme = {
   ...DefaultTheme,
   roundness: 3,
@@ -25,6 +27,7 @@ const theme = {
 };
 
 export default function App() {
+  noConsole();
   return (
     <SafeAreaProvider>
       <Provider store={store}>

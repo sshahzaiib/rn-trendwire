@@ -14,18 +14,16 @@ const AuthLoadingScreen = props => {
 
   const _bootstrapAsync = useCallback(async () => {
     const userToken = user.credentials?.tokens?.access?.token || null;
-    let interceptor;
+    let interceptor = http.interceptors.request.use(
+      config => {
+        config.headers.Authorization = `Bearer ${userToken}`;
+        return config;
+      },
+      null,
+      { synchronous: true },
+    );
 
-    if (userToken && user.isLoggedIn) {
-      interceptor = http.interceptors.request.use(
-        config => {
-          config.headers.Authorization = `Bearer ${userToken}`;
-          return config;
-        },
-        null,
-        { synchronous: true },
-      );
-    } else if (interceptor) {
+    if (!userToken) {
       http.interceptors.request.eject(interceptor);
     }
 
