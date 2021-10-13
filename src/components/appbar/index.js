@@ -5,7 +5,7 @@ import { Appbar as RNPAppbar, Avatar, Button } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { goBack, navigate } from "../../utils/navigationService";
 
-const AppBar = ({ title, showMenu, noBackAction }) => {
+const AppBar = ({ title, showMenu, noBackAction, search }) => {
   const _handleSearch = () => console.log("Searching");
   const auth = useSelector(state => state.auth);
 
@@ -18,11 +18,13 @@ const AppBar = ({ title, showMenu, noBackAction }) => {
       <RNPAppbar.Content title={title} />
       {showMenu && (
         <>
-          <RNPAppbar.Action
-            icon="magnify"
-            color="#555"
-            onPress={_handleSearch}
-          />
+          {search && (
+            <RNPAppbar.Action
+              icon="magnify"
+              color="#555"
+              onPress={_handleSearch}
+            />
+          )}
           {auth.isLoggedIn ? (
             <Pressable onPress={() => navigate("Account")}>
               <Avatar.Image
@@ -58,11 +60,13 @@ const styles = StyleSheet.create({
 AppBar.propTypes = {
   noBackAction: PropTypes.bool,
   showMenu: PropTypes.bool,
+  search: PropTypes.bool,
   title: PropTypes.string.isRequired,
 };
 
 AppBar.defaultProps = {
   showMenu: true,
+  search: true,
   noBackAction: false,
 };
 

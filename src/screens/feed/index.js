@@ -6,7 +6,7 @@ import Products from "./Products";
 
 const Feed = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ height: "100%" }}>
       <AppBar noBackAction title="Explore" />
       <Categories />
       <Products />

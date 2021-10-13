@@ -1,5 +1,6 @@
 import axios from "axios";
 import { configure } from "axios-hooks";
+import { store } from "../redux";
 
 export const config = {
   baseURL:
@@ -16,5 +17,16 @@ configure({
   axios: instance,
   cache: false,
 });
+
+export const interceptor = instance.interceptors.request.use(
+  reqConfig => {
+    reqConfig.headers.Authorization = `Bearer ${
+      store.getState().auth.credentials?.tokens?.access?.token
+    }`;
+    return reqConfig;
+  },
+  null,
+  { synchronous: true },
+);
 
 export const http = instance;

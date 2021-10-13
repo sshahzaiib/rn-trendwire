@@ -19,6 +19,7 @@ import {
 } from "../../redux/selectors";
 import { updateProfileData } from "../../redux/actions/authActions";
 import { uniq } from "lodash-es";
+import { navigate } from "../../utils/navigationService";
 const { width } = Dimensions.get("window");
 
 const ProductCard = ({ data }) => {
@@ -58,7 +59,11 @@ const ProductCard = ({ data }) => {
 
   return (
     <Pressable
-      onPress={() => console.log("Title")}
+      onPress={() =>
+        navigate("ProductDetails", {
+          productId: data.id,
+        })
+      }
       style={{
         padding: 5,
         width: width / 2,

@@ -16,6 +16,7 @@ import FWIcon from "react-native-vector-icons/SimpleLineIcons";
 import { useSelector } from "react-redux";
 import { Text, View } from "react-native";
 import { useCartItemsCount } from "../redux/selectors";
+import ProductDetails from "../screens/productDetails";
 
 const navigationOptions = {
   headerShown: false,
@@ -40,10 +41,26 @@ const AccountStack = createStackNavigator(
   },
 );
 
+const HomeStack = createStackNavigator(
+  {
+    Feed: {
+      screen: Feed,
+      navigationOptions,
+    },
+    ProductDetails: {
+      screen: ProductDetails,
+      navigationOptions,
+    },
+  },
+  {
+    initialRouteName: "Feed",
+  },
+);
+
 export default createMaterialBottomTabNavigator(
   {
     Home: {
-      screen: Feed,
+      screen: HomeStack,
     },
     Favorites: {
       screen: Favorites,

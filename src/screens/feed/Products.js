@@ -1,7 +1,7 @@
 import useAxios from "axios-hooks";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, RefreshControl, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   heightPercentageToDP,
@@ -20,9 +20,10 @@ const Products = () => {
     select: "title,price,images,price,discount",
   });
   const [page, setPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
 
-  const [{ data, loading, error }] = useAxios({
+  const [{ data, loading, error }, refetch] = useAxios({
     url: "/product/query",
     params,
   });
@@ -42,6 +43,7 @@ const Products = () => {
 
   useEffect(() => {
     dispatch(clearProducts());
+    setPage(1);
     setParams(_params =>
       Object.assign({}, _params, {
         category: selectedCategories,
@@ -52,6 +54,7 @@ const Products = () => {
   useEffect(() => {
     if (!error && !loading) {
       dispatch(setProducts(data));
+      setRefreshing(false);
     }
   }, [data, dispatch, error, loading]);
 
@@ -70,35 +73,44 @@ const Products = () => {
     }
   }, [moreLoading, page, products.totalPages]);
 
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    dispatch(clearProducts());
+    setPage(1);
+    refetch();
+  }, [dispatch, refetch]);
+
   if (error) {
     return <View />;
   }
   return loading ? (
     <CardSkeleton />
   ) : (
-    <FlatList
-      data={products.results}
-      numColumns={2}
-      contentContainerStyle={{ paddingBottom: 120 }}
-      horizontal={false}
-      renderItem={({ item }) => <ProductCard data={item} />}
-      ListFooterComponent={() =>
-        moreLoading ? (
-          <View
-            style={{
-              position: "relative",
-              width: widthPercentageToDP("100%"),
-              height: heightPercentageToDP("10%"),
-              paddingVertical: 20,
-              marginBottom: 10,
-            }}>
-            <ActivityIndicator animating color="#000" size="large" />
-          </View>
-        ) : null
-      }
-      onEndReached={onEndReach}
-      ListEmptyComponent={<NoResults />}
-    />
+    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh}>
+      <FlatList
+        data={products.results}
+        numColumns={2}
+        contentContainerStyle={{ paddingBottom: 120 }}
+        horizontal={false}
+        renderItem={({ item }) => <ProductCard data={item} />}
+        ListFooterComponent={() =>
+          moreLoading ? (
+            <View
+              style={{
+                position: "relative",
+                width: widthPercentageToDP("100%"),
+                height: heightPercentageToDP("10%"),
+                paddingVertical: 20,
+                marginBottom: 50,
+              }}>
+              <ActivityIndicator animating color="#000" size="large" />
+            </View>
+          ) : null
+        }
+        onEndReached={onEndReach}
+        ListEmptyComponent={<NoResults />}
+      />
+    </RefreshControl>
   );
 };
 
