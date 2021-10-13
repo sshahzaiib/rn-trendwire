@@ -17,6 +17,8 @@ import { useSelector } from "react-redux";
 import { Text, View } from "react-native";
 import { useCartItemsCount } from "../redux/selectors";
 import ProductDetails from "../screens/productDetails";
+import Search from "../screens/feed/search";
+import SearchResults from "../screens/feed/search/searchResults";
 
 const navigationOptions = {
   headerShown: false,
@@ -49,6 +51,14 @@ const HomeStack = createStackNavigator(
     },
     ProductDetails: {
       screen: ProductDetails,
+      navigationOptions,
+    },
+    Search: {
+      screen: Search,
+      navigationOptions,
+    },
+    SearchResults: {
+      screen: SearchResults,
       navigationOptions,
     },
   },

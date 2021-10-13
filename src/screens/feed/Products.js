@@ -17,7 +17,7 @@ const Products = () => {
   const selectedCategories = useSelector(state => state.categories.selected);
   const products = useSelector(state => state.products.data);
   const [params, setParams] = useState({
-    select: "title,price,images,price,discount",
+    select: "title,price,images,discount",
   });
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -32,7 +32,7 @@ const Products = () => {
     {
       url: "/product/query",
       params: {
-        select: "title,price,images,price,discount",
+        select: "title,images,price,discount",
         page,
       },
     },

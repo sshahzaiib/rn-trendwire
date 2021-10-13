@@ -90,11 +90,15 @@ const ProductCard = ({ data }) => {
               color: "pink",
               borderless: true,
             }}
-            onPress={() => handleFavorite(data.id)}>
+            onPress={() => handleFavorite(data.id ?? data._id)}>
             <MCIcon
               size={20}
               color="red"
-              name={favorites.includes(data.id) ? "heart" : "heart-outline"}
+              name={
+                favorites.includes(data.id ?? data._id)
+                  ? "heart"
+                  : "heart-outline"
+              }
             />
           </Pressable>
         </View>
@@ -152,13 +156,15 @@ const ProductCard = ({ data }) => {
             <View style={{ marginRight: widthPercentageToDP(2) }}>
               <Pressable
                 android_ripple={{ color: "#eee", borderless: true }}
-                onPress={() => handleAddToCart(data.id)}>
+                onPress={() => handleAddToCart(data.id ?? data._id)}>
                 <FWIcon
                   color="#555"
                   name="handbag"
                   size={20}
                   style={{
-                    color: cartList.includes(data.id) ? "red" : "#999",
+                    color: cartList.includes(data.id ?? data._id)
+                      ? "red"
+                      : "#999",
                   }}
                 />
               </Pressable>
@@ -173,6 +179,7 @@ const ProductCard = ({ data }) => {
 ProductCard.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string,
+    _id: PropTypes.string,
     discount: PropTypes.string,
     images: PropTypes.array,
     price: PropTypes.string,

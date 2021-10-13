@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { goBack, navigate } from "../../utils/navigationService";
 
 const AppBar = ({ title, showMenu, noBackAction, search }) => {
-  const _handleSearch = () => console.log("Searching");
+  const _handleSearch = () => navigate("Search");
   const auth = useSelector(state => state.auth);
 
   const user = useSelector(state => state.auth.credentials?.user);
