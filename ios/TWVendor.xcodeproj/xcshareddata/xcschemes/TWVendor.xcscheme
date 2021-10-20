@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "trendwire.app"
-               BlueprintName = "trendwire"
-               ReferencedContainer = "container:trendwire.xcodeproj">
+               BuildableName = "TWVendor.app"
+               BlueprintName = "TWVendor"
+               ReferencedContainer = "container:TWVendor.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "trendwireTests.xctest"
-               BlueprintName = "trendwireTests"
-               ReferencedContainer = "container:trendwire.xcodeproj">
+               BuildableName = "TWVendorTests.xctest"
+               BlueprintName = "TWVendorTests"
+               ReferencedContainer = "container:TWVendor.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "trendwire.app"
-            BlueprintName = "trendwire"
-            ReferencedContainer = "container:trendwire.xcodeproj">
+            BuildableName = "TWVendor.app"
+            BlueprintName = "TWVendor"
+            ReferencedContainer = "container:TWVendor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "trendwire.app"
-            BlueprintName = "trendwire"
-            ReferencedContainer = "container:trendwire.xcodeproj">
+            BuildableName = "TWVendor.app"
+            BlueprintName = "TWVendor"
+            ReferencedContainer = "container:TWVendor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
