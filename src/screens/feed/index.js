@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 22,
   },
   tileColumn: {
-    padding: 10,
+    padding: 5,
   },
   title: {
     color: "#fff",
