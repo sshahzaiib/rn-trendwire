@@ -29,7 +29,7 @@ const Layout = ({ children }) => {
     <View style={styles.container}>
       <Image
         blurRadius={5}
-        source={require("../../assets/images/pexels-arsham-haghani-3387577.jpg")}
+        source={require("../../assets/images/signup-background.jpg")}
         imageStyle={{ resizeMode: "contain" }}
         style={styles.image}
       />

@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const signup = newUser => dispatch => {
   dispatch({ type: SET_AUTH_LOADING, payload: true });
   http
-    .post("/auth/register", newUser)
+    .post("/vendor/auth/register", newUser)
     .then(async res => {
       dispatch({ type: SET_USER_DATA, payload: res.data });
       setTimeout(() => {
@@ -31,7 +31,7 @@ export const signup = newUser => dispatch => {
 export const login = data => dispatch => {
   dispatch({ type: SET_AUTH_LOADING, payload: true });
   http
-    .post("/auth/login", data)
+    .post("/vendor/auth/login", data)
     .then(async res => {
       // return console.log(res.data);
       dispatch({ type: USER_LOGIN, payload: res.data });
@@ -48,9 +48,9 @@ export const login = data => dispatch => {
     });
 };
 
-export const getAuthenticatedUserData = userId => dispatch => {
+export const getAuthenticatedUserData = vendorId => dispatch => {
   http
-    .get(`/users/${userId}/me`)
+    .get(`/vendor/${vendorId}/me`)
     .then(res => {
       dispatch({ type: SET_USER_DATA, payload: res.data });
     })
@@ -59,9 +59,9 @@ export const getAuthenticatedUserData = userId => dispatch => {
     });
 };
 
-export const updateProfileImage = (userId, formData) => dispatch => {
+export const updateProfileImage = (vendorId, formData) => dispatch => {
   http
-    .post(`/users/${userId}/me/updateProfileImage`, formData)
+    .post(`/vendor/${vendorId}/me/updateProfileImage`, formData)
     .then(({ data }) => {
       dispatch({ type: SET_USER_DATA, payload: data });
     })
@@ -70,10 +70,10 @@ export const updateProfileImage = (userId, formData) => dispatch => {
     });
 };
 
-export const updateProfileData = (userId, data, showToast) => dispatch => {
+export const updateProfileData = (vendorId, data, showToast) => dispatch => {
   dispatch({ type: SET_AUTH_LOADING, payload: true });
   http
-    .patch(`/users/${userId}/me`, data)
+    .patch(`/vendor/${vendorId}/me`, data)
     .then(res => {
       dispatch({ type: SET_USER_DATA, payload: res.data });
       showToast && showToast();
@@ -86,7 +86,7 @@ export const updateProfileData = (userId, data, showToast) => dispatch => {
 
 export const changePassword = (data, showToast) => dispatch => {
   http
-    .patch(`/auth/change-password`, data)
+    .patch(`/vendor/auth/change-password`, data)
     .then(res => {
       showToast("Password Updated!");
     })
@@ -103,5 +103,5 @@ export const logout = data => async dispatch => {
     type: USER_LOGOUT,
   });
   navigate("Auth");
-  http.post("/auth/logout", data);
+  http.post("/vendor/auth/logout", data);
 };

@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { goBack, navigate } from "../../utils/navigationService";
 
 const AppBar = ({ title, showMenu, noBackAction, search }) => {
-  const _handleSearch = () => navigate("Search");
   const auth = useSelector(state => state.auth);
 
   const user = useSelector(state => state.auth.credentials?.user);
@@ -18,13 +17,6 @@ const AppBar = ({ title, showMenu, noBackAction, search }) => {
       <RNPAppbar.Content title={title} />
       {showMenu && (
         <>
-          {search && (
-            <RNPAppbar.Action
-              icon="magnify"
-              color="#555"
-              onPress={_handleSearch}
-            />
-          )}
           {auth.isLoggedIn ? (
             <Pressable onPress={() => navigate("Account")}>
               <Avatar.Image

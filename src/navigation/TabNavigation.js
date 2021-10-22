@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 // import MTIcon from "react-native-vector-icon/MaterialCommunityIcons";
-import Feed from "../screens/feed";
+import Home from "../screens/feed";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import Account from "../screens/account";
 import { createStackNavigator } from "react-navigation-stack";
@@ -19,6 +19,7 @@ import { useCartItemsCount } from "../redux/selectors";
 import ProductDetails from "../screens/productDetails";
 import Search from "../screens/feed/search";
 import SearchResults from "../screens/feed/search/searchResults";
+import ScanScreen from "../screens/feed/ScanQR";
 
 const navigationOptions = {
   headerShown: false,
@@ -45,8 +46,8 @@ const AccountStack = createStackNavigator(
 
 const HomeStack = createStackNavigator(
   {
-    Feed: {
-      screen: Feed,
+    Home: {
+      screen: Home,
       navigationOptions,
     },
     ProductDetails: {
@@ -61,9 +62,13 @@ const HomeStack = createStackNavigator(
       screen: SearchResults,
       navigationOptions,
     },
+    ScanQR: {
+      screen: ScanScreen,
+      navigationOptions,
+    },
   },
   {
-    initialRouteName: "Feed",
+    initialRouteName: "Home",
   },
 );
 
