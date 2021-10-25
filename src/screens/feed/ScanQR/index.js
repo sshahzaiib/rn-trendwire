@@ -1,44 +1,46 @@
-/* eslint-disable react-native/split-platform-components */
-import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Linking,
-  ToastAndroid,
-} from "react-native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { RNCamera } from "react-native-camera";
+import { navigate } from "../../../utils/navigationService";
 
-export default class ScanScreen extends Component {
-  onSuccess = e => {
-    ToastAndroid.show(e.data);
-    Linking.openURL(e.data).catch(err =>
-      console.error("An error occured", err),
-    );
+export default function ScanQR() {
+  const onSuccess = e => {
+    navigate("CreateOrder", {
+      qrId: e.data,
+    });
   };
 
-  render() {
-    return (
-      <QRCodeScanner
-        onRead={this.onSuccess}
-        flashMode={RNCamera.Constants.FlashMode.torch}
-        topContent={
-          <Text style={styles.centerText}>
-            Go to{" "}
-            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-            your computer and scan the QR code.
-          </Text>
-        }
-        bottomContent={
-          <TouchableOpacity style={styles.buttonTouchable}>
-            <Text style={styles.buttonText}>OK. Got it!</Text>
-          </TouchableOpacity>
-        }
-      />
-    );
-  }
+  return (
+    <QRCodeScanner
+      onRead={onSuccess}
+      flashMode={RNCamera.Constants.FlashMode.auto}
+      fadeIn
+      reactivate
+      reactivateTimeout={3000}
+      topContent={
+        <Text style={styles.centerText}>
+          Scan Product QR Code from customer&apos;s phone to place the order for
+          your customer
+        </Text>
+      }
+      bottomContent={
+        <TouchableOpacity
+          onPress={
+            __DEV__
+              ? () =>
+                  navigate("CreateOrder", {
+                    qrId: "17f240c2-e85e-43c4-885d-6f31c3536199",
+                  })
+              : () => navigate("Home")
+          }
+          style={styles.buttonTouchable}>
+          <Text style={styles.buttonText}>Close</Text>
+        </TouchableOpacity>
+      }
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -48,15 +50,12 @@ const styles = StyleSheet.create({
     padding: 32,
     color: "#777",
   },
-  textBold: {
-    fontWeight: "500",
-    color: "#000",
-  },
   buttonText: {
     fontSize: 21,
     color: "rgb(0,122,255)",
   },
   buttonTouchable: {
     padding: 16,
+    marginTop: 50,
   },
 });

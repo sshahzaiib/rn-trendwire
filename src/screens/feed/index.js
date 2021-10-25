@@ -1,14 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Col, Grid, Row } from "react-native-easy-grid";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppBar from "../../components/appbar";
 import MIcon from "react-native-vector-icons/MaterialIcons";
 import { useUserSelector } from "../../redux/selectors";
 import { navigate } from "../../utils/navigationService";
-
-const { width } = Dimensions.get("window");
 
 const Home = () => {
   const user = useUserSelector();
@@ -26,23 +24,15 @@ const Home = () => {
               backgroundColor="#1AB1B0"
               title="Manage Orders"
               icon={props => <MIcon {...props} name="local-grocery-store" />}
-            />
-            <Tile
-              backgroundColor="#FF7544"
-              title="Manage Products"
-              icon={props => <MIcon {...props} name="list-alt" />}
+              path="ManageOrders"
             />
           </Row>
           <Row>
             <Tile
-              backgroundColor="#FB5A7C"
-              title="Reviews"
-              icon={props => <MIcon {...props} name="rate-review" />}
-            />
-            <Tile
-              backgroundColor="#8677FE"
-              title="Stories"
-              icon={props => <MIcon {...props} name="amp-stories" />}
+              backgroundColor="#FF7544"
+              title="Manage Products"
+              icon={props => <MIcon {...props} name="list-alt" />}
+              path="Products"
             />
           </Row>
           <Row>
@@ -52,10 +42,13 @@ const Home = () => {
               icon={props => <MIcon {...props} name="qr-code-scanner" />}
               path="ScanQR"
             />
+          </Row>
+          <Row>
             <Tile
               backgroundColor="#2C293C"
               title="Account"
               icon={props => <MIcon {...props} name="account-circle" />}
+              path="Account"
             />
           </Row>
         </Grid>
@@ -68,7 +61,7 @@ export default Home;
 
 const Tile = ({ backgroundColor, title, icon: Icon, path }) => {
   return (
-    <Col onPress={() => navigate(path)} style={styles.tileColumn}>
+    <Col onPress={() => path && navigate(path)} style={styles.tileColumn}>
       <View style={{ ...styles.tileContainer, backgroundColor }}>
         {Icon && <Icon color="#fff" size={50} style={{ marginBottom: 10 }} />}
         <Text style={styles.title}>{title}</Text>
@@ -106,8 +99,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   tileContainer: {
-    width: width / 2.2,
-    height: 170,
+    height: 150,
     borderRadius: 20,
     display: "flex",
     alignItems: "center",

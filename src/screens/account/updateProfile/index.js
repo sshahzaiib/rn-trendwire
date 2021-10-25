@@ -1,4 +1,3 @@
-/* eslint-disable react-native/split-platform-components */
 import PropTypes from "prop-types";
 import { ErrorMessage, Formik } from "formik";
 import React, { useEffect } from "react";
@@ -27,6 +26,7 @@ import { CLEAR_ERRORS } from "../../../redux/types";
 import AppBar from "../../../components/appbar";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { launchImageLibrary } from "react-native-image-picker";
+import MaskInput from "react-native-mask-input";
 
 const Layout = ({ children }) => {
   return (
@@ -52,7 +52,10 @@ Layout.propTypes = {
 
 const ProfileSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
-  contactNo: Yup.string().required("Required"),
+  contactNo: Yup.string()
+    .required("Required")
+    .min(12, "Invalid Contact")
+    .label("Contact No"),
   address: Yup.string().required("Required"),
 });
 
@@ -61,12 +64,13 @@ const UpdateProfile = () => {
   const user = auth.credentials?.user ?? {};
   const dispatch = useDispatch();
 
-  const showToast = () => {
-    ToastAndroid.show("Profile Updated.", ToastAndroid.SHORT);
+  const showToast = message => {
+    ToastAndroid.show(message ?? "Profile Updated.", ToastAndroid.SHORT);
   };
 
   const _handleSubmit = values => {
-    dispatch(updateProfileData(user.id, values, showToast));
+    const data = { ...values, contactNo: "+" + values.contactNo };
+    dispatch(updateProfileData(user.id, data, showToast));
   };
 
   useEffect(() => {
@@ -87,7 +91,7 @@ const UpdateProfile = () => {
           return;
         }
         if (response.errorCode === "camera_unavailable") {
-          return ToastAndroid.show("Camera not found!");
+          return showToast("Camera not found!");
         }
         if (response.assets) {
           let file = response.assets[0];
@@ -132,6 +136,7 @@ const UpdateProfile = () => {
             values,
             errors,
             touched,
+            setFieldValue,
           }) => (
             <>
               <TextInput
@@ -167,19 +172,49 @@ const UpdateProfile = () => {
                   },
                 }}
                 underlineColor="#000"
+                keyboardType="phone-pad"
+                placeholder="(92) 000 000 0000"
+                placeholderTextColor="#888"
                 selectionColor="#000"
                 error={errors.contactNo && touched.contactNo}
-                onChangeText={handleChange("contactNo")}
                 onBlur={handleBlur("contactNo")}
                 value={values.contactNo}
+                render={props => (
+                  <MaskInput
+                    {...props}
+                    onChangeText={(_, unmasked) =>
+                      setFieldValue("contactNo", unmasked)
+                    }
+                    mask={[
+                      "(",
+                      /\d/, // that's because I want it to be a digit (0-9)
+                      /\d/,
+                      ")",
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                    ]}
+                  />
+                )}
               />
+
               {errors.contactNo && (
                 <Text style={styles.errorText}>
                   <ErrorMessage name="contactNo" />
                 </Text>
               )}
               <TextInput
-                label="Address"
+                label="Full Address"
                 multiline
                 style={{ backgroundColor: "transparent" }}
                 theme={{

@@ -17,3 +17,6 @@ export const useUserIdSelector = () =>
 
 export const useUserSelector = () =>
   useSelector(state => state.auth.credentials?.user ?? {});
+
+export const useIsInternetConnectedSelector = () =>
+  useSelector(state => state.UI.netInfo.isConnected ?? true);

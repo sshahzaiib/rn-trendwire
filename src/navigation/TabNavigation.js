@@ -10,16 +10,19 @@ import { createStackNavigator } from "react-navigation-stack";
 import UpdateProfile from "../screens/account/updateProfile";
 import ChangePassword from "../screens/account/changePassword";
 import { store } from "../redux";
-import Favorites from "../screens/favorites";
-import Cart from "../screens/cart";
 import FWIcon from "react-native-vector-icons/SimpleLineIcons";
 import { useSelector } from "react-redux";
 import { Text, View } from "react-native";
 import { useCartItemsCount } from "../redux/selectors";
 import ProductDetails from "../screens/productDetails";
-import Search from "../screens/feed/search";
-import SearchResults from "../screens/feed/search/searchResults";
 import ScanScreen from "../screens/feed/ScanQR";
+import Products from "../screens/products";
+import CreateProduct from "../screens/createProduct";
+import EditProduct from "../screens/products/editProduct";
+import Orders from "../screens/orders";
+import OrderDetails from "../screens/orders/orderDetails";
+// import StoriesScreen from "../screens/stories";
+import CreateOrder from "../screens/createOrder";
 
 const navigationOptions = {
   headerShown: false,
@@ -50,18 +53,6 @@ const HomeStack = createStackNavigator(
       screen: Home,
       navigationOptions,
     },
-    ProductDetails: {
-      screen: ProductDetails,
-      navigationOptions,
-    },
-    Search: {
-      screen: Search,
-      navigationOptions,
-    },
-    SearchResults: {
-      screen: SearchResults,
-      navigationOptions,
-    },
     ScanQR: {
       screen: ScanScreen,
       navigationOptions,
@@ -72,24 +63,63 @@ const HomeStack = createStackNavigator(
   },
 );
 
+const ProductStack = createStackNavigator(
+  {
+    Main: {
+      screen: Products,
+      navigationOptions,
+    },
+    ProductDetails: {
+      screen: ProductDetails,
+      navigationOptions,
+    },
+    CreateProduct: {
+      screen: CreateProduct,
+      navigationOptions,
+    },
+    EditProduct: {
+      screen: EditProduct,
+      navigationOptions,
+    },
+  },
+  {
+    initialRouteName: "Main",
+  },
+);
+const OrderStack = createStackNavigator(
+  {
+    Main: {
+      screen: Orders,
+      navigationOptions,
+    },
+    OrderDetails: {
+      screen: OrderDetails,
+      navigationOptions,
+    },
+    CreateOrder: {
+      screen: CreateOrder,
+      navigationOptions,
+    },
+  },
+  {
+    initialRouteName: "Main",
+  },
+);
+
 export default createMaterialBottomTabNavigator(
   {
     Home: {
       screen: HomeStack,
     },
-    Favorites: {
-      screen: Favorites,
-      navigationOptions: {
-        tabBarOnPress: ({ navigation }) => {
-          if (store.getState().auth.isLoggedIn) {
-            navigation.navigate("Favorites");
-          }
-        },
-      },
+    Products: {
+      screen: ProductStack,
     },
-    Cart: {
-      screen: Cart,
+    ManageOrders: {
+      screen: OrderStack,
     },
+    // Stories: {
+    //   screen: StoriesScreen,
+    // },
     Account: {
       screen: AccountStack,
       navigationOptions: {
@@ -127,9 +157,11 @@ export default createMaterialBottomTabNavigator(
               <Ionicons name={iconName} size={25} color={tintColor} />
             </IconWithBadge>
           );
-        } else if (routeName === "Favorites") {
-          iconName = focused ? "heart" : "heart-outline";
-        } else if (routeName === "Cart") {
+        } else if (routeName === "Products") {
+          iconName = focused
+            ? "ios-list-circle-sharp"
+            : "ios-list-circle-outline";
+        } else if (routeName === "ManageOrders") {
           return (
             <IconWithBadge badgeCount={count}>
               <FWIcon color={tintColor} name="handbag" size={20} />

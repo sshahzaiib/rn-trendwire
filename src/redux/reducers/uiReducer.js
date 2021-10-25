@@ -1,4 +1,10 @@
-import { SET_LOADING, SET_ERRORS, UNSET_LOADING, CLEAR_ERRORS } from "../types";
+import {
+  SET_LOADING,
+  SET_ERRORS,
+  UNSET_LOADING,
+  CLEAR_ERRORS,
+  SET_NET_INFO,
+} from "../types";
 import { config } from "../../utils/config.js";
 
 const initialState = {
@@ -6,6 +12,10 @@ const initialState = {
   errors: null,
   defaults: {
     baseURL: config.baseURL,
+  },
+  netInfo: {
+    isConnected: true,
+    isInternetReachable: true,
   },
 };
 
@@ -26,7 +36,11 @@ export default (state = initialState, action) => {
       });
     case CLEAR_ERRORS:
       return Object.assign({}, initialState, {
-        orientation: state.orientation,
+        errors: null,
+      });
+    case SET_NET_INFO:
+      return Object.assign({}, initialState, {
+        netInfo: action.payload,
       });
     default:
       return state;

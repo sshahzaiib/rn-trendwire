@@ -15,7 +15,10 @@ import { PersistGate } from "redux-persist/lib/integration/react";
 import Navigation from "./src/navigation";
 import navigationService from "./src/utils/navigationService";
 
-import noConsole from "no-console";
+import noConsole from "@sshahzaiib/no-console";
+
+import NetInfo from "@react-native-community/netinfo";
+import { SET_NET_INFO } from "./src/redux/types";
 
 const theme = {
   ...DefaultTheme,
@@ -28,6 +31,19 @@ const theme = {
 
 export default function App() {
   noConsole();
+
+  React.useEffect(() => {
+    // Subscribe to network state change
+    const unsubscribe = NetInfo.addEventListener(state => {
+      store.dispatch({
+        type: SET_NET_INFO,
+        payload: state,
+      });
+    });
+
+    // Unsubscribe
+    return () => unsubscribe();
+  });
   return (
     <SafeAreaProvider>
       <Provider store={store}>

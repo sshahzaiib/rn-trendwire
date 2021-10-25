@@ -2,61 +2,11 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { Dimensions, Pressable, Text, View } from "react-native";
 import { Card, Paragraph } from "react-native-paper";
-import {
-  heightPercentageToDP,
-  widthPercentageToDP,
-} from "react-native-responsive-screen";
-import FWIcon from "react-native-vector-icons/SimpleLineIcons";
-import MCIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useDispatch } from "react-redux";
-import { setFavorite } from "../../redux/actions/productActions";
-import { addToCart } from "../../redux/actions/cartActions";
-import {
-  useCartItemsSelector,
-  useFavoritesSelector,
-  useIsLoggedInSelector,
-  useUserIdSelector,
-} from "../../redux/selectors";
-import { updateProfileData } from "../../redux/actions/authActions";
-import { uniq } from "lodash-es";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 import { navigate } from "../../utils/navigationService";
 const { width } = Dimensions.get("window");
 
 const ProductCard = ({ data }) => {
-  const dispatch = useDispatch();
-  const favorites = useFavoritesSelector();
-  const cartList = useCartItemsSelector();
-  const isLoggedIn = useIsLoggedInSelector();
-  const userId = useUserIdSelector();
-
-  const handleFavorite = React.useCallback(
-    id => {
-      let selected = [...favorites];
-      if (selected.includes(id)) {
-        selected.splice(selected.indexOf(id), 1);
-      } else {
-        selected = uniq([...selected, id]);
-      }
-      dispatch(setFavorite(selected));
-      dispatch(updateProfileData(userId, { favorites: selected }));
-    },
-    [dispatch, favorites, userId],
-  );
-
-  const handleAddToCart = React.useCallback(
-    id => {
-      let selected = [...cartList];
-      if (selected.includes(id)) {
-        selected.splice(selected.indexOf(id), 1);
-      } else {
-        selected = uniq([...selected, id]);
-      }
-      dispatch(addToCart(selected));
-      isLoggedIn && dispatch(updateProfileData(userId, { cart: selected }));
-    },
-    [cartList, dispatch, isLoggedIn, userId],
-  );
-
   return (
     <Pressable
       onPress={() =>
@@ -74,34 +24,6 @@ const ProductCard = ({ data }) => {
             uri: data?.images[0],
           }}
         />
-        <View
-          style={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            backgroundColor: "white",
-            borderRadius: 50,
-            padding: 4,
-            zIndex: 100,
-          }}>
-          <Pressable
-            disabled={!isLoggedIn}
-            android_ripple={{
-              color: "pink",
-              borderless: true,
-            }}
-            onPress={() => handleFavorite(data.id ?? data._id)}>
-            <MCIcon
-              size={20}
-              color="red"
-              name={
-                favorites.includes(data.id ?? data._id)
-                  ? "heart"
-                  : "heart-outline"
-              }
-            />
-          </Pressable>
-        </View>
         <View style={{ position: "absolute", bottom: 50, width: "100%" }}>
           <View style={{ width: "100%" }}>
             <View
@@ -128,7 +50,11 @@ const ProductCard = ({ data }) => {
                   style={{
                     color: "#fff",
                   }}>
-                  Rs. {data.price}
+                  Rs.{" "}
+                  {parseInt(
+                    data.price - data.price * (data.discount / 100),
+                    10,
+                  )}
                 </Paragraph>
                 <Paragraph
                   style={{
@@ -153,22 +79,6 @@ const ProductCard = ({ data }) => {
               paddingVertical: heightPercentageToDP(1),
             }}>
             <Text style={{ flex: 1 }}>Save {data.discount}%</Text>
-            <View style={{ marginRight: widthPercentageToDP(2) }}>
-              <Pressable
-                android_ripple={{ color: "#eee", borderless: true }}
-                onPress={() => handleAddToCart(data.id ?? data._id)}>
-                <FWIcon
-                  color="#555"
-                  name="handbag"
-                  size={20}
-                  style={{
-                    color: cartList.includes(data.id ?? data._id)
-                      ? "red"
-                      : "#999",
-                  }}
-                />
-              </Pressable>
-            </View>
           </View>
         </Card.Actions>
       </Card>

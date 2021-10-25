@@ -1,7 +1,7 @@
 import useAxios from "axios-hooks";
 import PropTypes from "prop-types";
 import React from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { withNavigation } from "react-navigation";
 import AppBar from "../../components/appbar";
@@ -9,39 +9,34 @@ import NoResults from "../../components/NoResults";
 import { SliderBox } from "react-native-image-slider-box";
 import FastImage from "react-native-fast-image";
 import { heightPercentageToDP } from "react-native-responsive-screen";
-import { Avatar, Button, Chip, Headline, Subheading } from "react-native-paper";
-import { isEmpty, uniq } from "lodash-es";
 import {
-  useCartItemsSelector,
-  useFavoritesSelector,
-  useIsLoggedInSelector,
-  useUserIdSelector,
-} from "../../redux/selectors";
-import { setFavorite } from "../../redux/actions/productActions";
-import { updateProfileData } from "../../redux/actions/authActions";
+  Button,
+  Chip,
+  Dialog,
+  Headline,
+  Paragraph,
+  Portal,
+  Subheading,
+} from "react-native-paper";
+import { isEmpty } from "lodash-es";
+import { useUserIdSelector } from "../../redux/selectors";
 import { useDispatch } from "react-redux";
-import MCIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { addToCart } from "../../redux/actions/cartActions";
 import Skeleton from "./Skeleton";
-import { Rating } from "react-native-ratings";
 import Reviews from "./Reviews";
-import QRModal from "./QRModal";
+import { http } from "../../utils/config";
+import { goBack, navigate } from "../../utils/navigationService";
+import { clearProducts, setProducts } from "../../redux/actions/productActions";
 
 // const HEART_IMAGE = require("../../assets/images/heart.png");
 
 const ProductDetails = ({ navigation }) => {
   const _id = navigation?.getParam("productId");
-  const favorites = useFavoritesSelector();
-  const isLoggedIn = useIsLoggedInSelector();
-  const dispatch = useDispatch();
-  const userId = useUserIdSelector();
-  const cartList = useCartItemsSelector();
 
-  const [{ data, loading, error }] = useAxios(
+  const [{ data, loading, error }, refetch] = useAxios(
     {
       url: "/product/query",
       params: {
-        populate: "creator,category",
+        populate: "category",
         // isActive: true,
         _id,
       },
@@ -53,29 +48,6 @@ const ProductDetails = ({ navigation }) => {
 
   let product = data?.results[0] ?? {};
 
-  const handleFavorite = React.useCallback(() => {
-    let selected = [...favorites];
-    if (selected.includes(_id)) {
-      selected.splice(selected.indexOf(_id), 1);
-    } else {
-      selected = uniq([...selected, _id]);
-    }
-    dispatch(setFavorite(selected));
-    dispatch(updateProfileData(userId, { favorites: selected }));
-  }, [_id, dispatch, favorites, userId]);
-
-  const handleAddToCart = React.useCallback(() => {
-    let selected = [...cartList];
-    if (selected.includes(_id)) {
-      selected.splice(selected.indexOf(_id), 1);
-    } else {
-      selected = uniq([...selected, _id]);
-    }
-    dispatch(addToCart(selected));
-    isLoggedIn && dispatch(updateProfileData(userId, { cart: selected }));
-  }, [_id, cartList, dispatch, isLoggedIn, userId]);
-
-  console.log(product);
   return (
     <SafeAreaView style={{ height: "100%", backgroundColor: "#fff" }}>
       <AppBar search={false} title={product.title ?? "Product"} />
@@ -128,40 +100,28 @@ const ProductDetails = ({ navigation }) => {
               <View style={styles.flexContainer}>
                 <View>
                   <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                    Rs. {product.price}{" "}
+                    Rs.{" "}
+                    {parseInt(
+                      product.price - product.price * (product.discount / 100),
+                      10,
+                    )}{" "}
                     <Text
                       style={{
                         textDecorationLine: "line-through",
                         color: "red",
                         fontSize: 16,
                       }}>
-                      {product.discount}
+                      {product.price}
                     </Text>
                   </Text>
                 </View>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                  }}>
-                  <QRModal productId={_id} quantity={1} />
-                  <Pressable
-                    disabled={!isLoggedIn}
-                    android_ripple={{
-                      color: "pink",
-                      radius: 27,
-                    }}
-                    onPress={handleFavorite}>
-                    <MCIcon
-                      size={25}
-                      color="red"
-                      name={favorites.includes(_id) ? "heart" : "heart-outline"}
-                      style={{ alignSelf: "center" }}
-                    />
-                    <Text>Favorite</Text>
-                  </Pressable>
-                </View>
+                <Chip mode="outlined">{product.discount}% Off</Chip>
+              </View>
+              <View style={styles.flexContainer}>
+                <Subheading>Approved:</Subheading>
+                <Chip mode="outlined">
+                  {product.isApproved ? "Approved" : "Pending"}
+                </Chip>
               </View>
               <View style={styles.flexContainer}>
                 <Subheading>Category:</Subheading>
@@ -170,44 +130,7 @@ const ProductDetails = ({ navigation }) => {
               <Subheading style={{ marginTop: 12 }}>
                 {product.description}
               </Subheading>
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  flexDirection: "row",
-                  marginVertical: 12,
-                  flexWrap: "wrap",
-                  borderColor: "#eee",
-                  padding: 10,
-                  borderRadius: 10,
-                  borderWidth: 2,
-                }}>
-                <Avatar.Image
-                  size={50}
-                  source={{ uri: product?.creator?.profileImg }}
-                />
-                <View style={{ marginLeft: 5 }}>
-                  <Subheading> {product?.creator.name} </Subheading>
-                  <View
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                      alignItems: "center",
-                    }}>
-                    <Rating
-                      ratingCount={5}
-                      imageSize={20}
-                      showRating={false}
-                      readonly={true}
-                      startingValue={5}
-                    />
-                    <Subheading> (3.5) </Subheading>
-                  </View>
-                </View>
-              </View>
-              <Reviews />
+              <Reviews productId={product.id} />
               <View
                 style={{
                   display: "flex",
@@ -238,15 +161,88 @@ const ProductDetails = ({ navigation }) => {
               marginTop: 5,
               paddingHorizontal: 10,
             }}>
-            <Button style={styles.button}>Buy Now</Button>
-            <Button style={styles.button} onPress={handleAddToCart}>
-              {cartList.includes(_id) ? "Remove from cart" : "Add to cart"}
+            <Button
+              onPress={() =>
+                navigate("EditProduct", {
+                  productId: product.id,
+                  refetch,
+                })
+              }
+              style={styles.button}>
+              Edit
             </Button>
+            <DeleteDialog productId={product.id} />
           </View>
         </View>
       )}
     </SafeAreaView>
   );
+};
+
+const DeleteDialog = ({ productId }) => {
+  const [visible, setVisible] = React.useState(false);
+  const vendorId = useUserIdSelector();
+  const dispatch = useDispatch();
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
+
+  // eslint-disable-next-line no-unused-vars
+  const [{ data }, refetch] = useAxios(
+    {
+      url: "/product/query",
+      params: {
+        select: "title,price,images,discount",
+        creator: vendorId,
+        isActive: true,
+        sortBy: "createdAt:desc",
+      },
+    },
+    {
+      manual: true,
+    },
+  );
+
+  const handleDelete = async () => {
+    try {
+      await http.delete(`/product/${productId}`);
+      dispatch(clearProducts());
+      refetch().then(res => {
+        dispatch(setProducts(res.data));
+        goBack();
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <>
+      <Button style={styles.button} onPress={showDialog}>
+        Delete
+      </Button>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Are you sure you want to delete this product?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button labelStyle={{ color: "#000" }} onPress={handleDelete}>
+              Confirm
+            </Button>
+            <Button labelStyle={{ color: "#000" }} onPress={hideDialog}>
+              Cancel
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </>
+  );
+};
+
+DeleteDialog.propTypes = {
+  productId: PropTypes.any,
 };
 
 ProductDetails.propTypes = {

@@ -1,6 +1,13 @@
+/* eslint-disable react-native/split-platform-components */
 import axios from "axios";
 import { configure } from "axios-hooks";
+import { ToastAndroid } from "react-native";
 import { store } from "../redux";
+import { SET_AUTH_ERRORS } from "../redux/types";
+
+const showToast = message => {
+  ToastAndroid.show(message, ToastAndroid.LONG);
+};
 
 export const config = {
   baseURL:
@@ -23,7 +30,17 @@ export const interceptor = instance.interceptors.request.use(
     reqConfig.headers.Authorization = `Bearer ${
       store.getState().auth.credentials?.tokens?.access?.token
     }`;
-    return reqConfig;
+
+    if (store.getState().UI.netInfo.isConnected) {
+      return reqConfig;
+    } else {
+      store.dispatch({
+        type: SET_AUTH_ERRORS,
+        payload: {},
+      });
+      showToast("No internet!");
+      throw new axios.Cancel("Internet diconnected!");
+    }
   },
   null,
   { synchronous: true },

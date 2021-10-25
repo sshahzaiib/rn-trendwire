@@ -8,16 +8,21 @@ import {
   widthPercentageToDP,
 } from "react-native-responsive-screen";
 import ProductCard from "../../components/ProductCard";
-import CardSkeleton from "./CardSkeleton";
+import CardSkeleton from "../../components/CardSkeleton";
 import NoResults from "../../components/NoResults";
 import { clearProducts, setProducts } from "../../redux/actions/productActions";
 import { ActivityIndicator } from "react-native-paper";
+import { useUserIdSelector } from "../../redux/selectors";
 
-const Products = () => {
+const ProductsList = () => {
   const selectedCategories = useSelector(state => state.categories.selected);
+  const vendorId = useUserIdSelector();
   const products = useSelector(state => state.products.data);
   const [params, setParams] = useState({
     select: "title,price,images,discount",
+    creator: vendorId,
+    isActive: true,
+    sortBy: "createdAt:desc",
   });
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -33,7 +38,10 @@ const Products = () => {
       url: "/product/query",
       params: {
         select: "title,images,price,discount",
+        creator: vendorId,
+        isActive: true,
         page,
+        sortBy: "createdAt:desc",
       },
     },
     {
@@ -90,7 +98,7 @@ const Products = () => {
       <FlatList
         data={products.results}
         numColumns={2}
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: 60 }}
         horizontal={false}
         renderItem={({ item }) => <ProductCard data={item} />}
         ListFooterComponent={() =>
@@ -114,4 +122,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default ProductsList;

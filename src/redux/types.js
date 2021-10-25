@@ -26,3 +26,6 @@ export const CLEAR_PRODUCTS = "CLEAR_PRODUCTS";
 
 // Cart
 export const ADD_TO_CART = "ADD_TO_CART";
+
+// NET Info
+export const SET_NET_INFO = "SET_NET_INFO";
