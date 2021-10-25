@@ -23,11 +23,9 @@ import { useDispatch } from "react-redux";
 import MCIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { addToCart } from "../../redux/actions/cartActions";
 import Skeleton from "./Skeleton";
-import { Rating } from "react-native-ratings";
 import Reviews from "./Reviews";
 import QRModal from "./QRModal";
-
-// const HEART_IMAGE = require("../../assets/images/heart.png");
+import { navigate } from "../../utils/navigationService";
 
 const ProductDetails = ({ navigation }) => {
   const _id = navigation?.getParam("productId");
@@ -126,18 +124,30 @@ const ProductDetails = ({ navigation }) => {
                 {product.title}
               </Headline>
               <View style={styles.flexContainer}>
-                <View>
+                <View
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "row",
+                  }}>
                   <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                    Rs. {product.price}{" "}
+                    Rs.{" "}
+                    {parseInt(
+                      product.price - product.price * (product.discount / 100),
+                      10,
+                    )}{" "}
                     <Text
                       style={{
                         textDecorationLine: "line-through",
                         color: "red",
                         fontSize: 16,
                       }}>
-                      {product.discount}
+                      {product.price}
                     </Text>
                   </Text>
+                  <Chip style={{ marginLeft: 5 }} mode="outlined">
+                    {product.discount}% Off
+                  </Chip>
                 </View>
                 <View
                   style={{
@@ -196,18 +206,11 @@ const ProductDetails = ({ navigation }) => {
                       flexWrap: "wrap",
                       alignItems: "center",
                     }}>
-                    <Rating
-                      ratingCount={5}
-                      imageSize={20}
-                      showRating={false}
-                      readonly={true}
-                      startingValue={5}
-                    />
-                    <Subheading> (3.5) </Subheading>
+                    <Subheading> Verified Seller </Subheading>
                   </View>
                 </View>
               </View>
-              <Reviews />
+              <Reviews productId={product.id} />
               <View
                 style={{
                   display: "flex",
@@ -238,7 +241,15 @@ const ProductDetails = ({ navigation }) => {
               marginTop: 5,
               paddingHorizontal: 10,
             }}>
-            <Button style={styles.button}>Buy Now</Button>
+            <Button
+              onPress={() =>
+                navigate("BuyNow", {
+                  productId: product.id,
+                })
+              }
+              style={styles.button}>
+              Buy Now
+            </Button>
             <Button style={styles.button} onPress={handleAddToCart}>
               {cartList.includes(_id) ? "Remove from cart" : "Add to cart"}
             </Button>

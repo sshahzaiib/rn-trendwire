@@ -12,7 +12,13 @@ import {
 import { useCallback } from "react";
 
 const Categories = () => {
-  const [{ data, loading }] = useAxios("/category/query");
+  const [{ data, loading }] = useAxios({
+    url: "/category/query",
+    params: {
+      sortBy: "name:asc",
+      limit: 50,
+    },
+  });
   const dispatch = useDispatch();
   const categories = useSelector(state => state.categories.data.results);
   const selected = useSelector(state => state.categories.selected);

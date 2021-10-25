@@ -17,8 +17,10 @@ import { useSelector } from "react-redux";
 import { Text, View } from "react-native";
 import { useCartItemsCount } from "../redux/selectors";
 import ProductDetails from "../screens/productDetails";
+import BuyNow from "../screens/productDetails/BuyNow";
 import Search from "../screens/feed/search";
 import SearchResults from "../screens/feed/search/searchResults";
+import MyOrders from "../screens/myOrders";
 
 const navigationOptions = {
   headerShown: false,
@@ -31,6 +33,10 @@ const AccountStack = createStackNavigator(
     },
     UpdateProfile: {
       screen: UpdateProfile,
+      navigationOptions,
+    },
+    MyOrders: {
+      screen: MyOrders,
       navigationOptions,
     },
     ChangePassword: {
@@ -51,6 +57,10 @@ const HomeStack = createStackNavigator(
     },
     ProductDetails: {
       screen: ProductDetails,
+      navigationOptions,
+    },
+    BuyNow: {
+      screen: BuyNow,
       navigationOptions,
     },
     Search: {

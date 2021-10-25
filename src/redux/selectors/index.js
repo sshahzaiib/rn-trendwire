@@ -14,3 +14,6 @@ export const useFavoritesSelector = () =>
 
 export const useUserIdSelector = () =>
   useSelector(state => state.auth.credentials?.user?.id);
+
+export const useUserDataSelector = () =>
+  useSelector(state => state.auth.credentials?.user ?? {});

@@ -128,7 +128,11 @@ const ProductCard = ({ data }) => {
                   style={{
                     color: "#fff",
                   }}>
-                  Rs. {data.price}
+                  Rs.{" "}
+                  {parseInt(
+                    data.price - data.price * (data.discount / 100),
+                    10,
+                  )}
                 </Paragraph>
                 <Paragraph
                   style={{

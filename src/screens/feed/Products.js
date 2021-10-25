@@ -18,6 +18,9 @@ const Products = () => {
   const products = useSelector(state => state.products.data);
   const [params, setParams] = useState({
     select: "title,price,images,discount",
+    isActive: true,
+    isApproved: true,
+    sortBy: "createdAt:desc",
   });
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -33,6 +36,9 @@ const Products = () => {
       url: "/product/query",
       params: {
         select: "title,images,price,discount",
+        isActive: true,
+        isApproved: true,
+        sortBy: "createdAt:desc",
         page,
       },
     },

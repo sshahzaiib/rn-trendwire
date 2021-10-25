@@ -1,4 +1,3 @@
-/* eslint-disable react-native/split-platform-components */
 import PropTypes from "prop-types";
 import { ErrorMessage, Formik } from "formik";
 import React, { useEffect } from "react";
@@ -27,6 +26,7 @@ import { CLEAR_ERRORS } from "../../../redux/types";
 import AppBar from "../../../components/appbar";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { launchImageLibrary } from "react-native-image-picker";
+import MaskInput from "react-native-mask-input";
 
 const Layout = ({ children }) => {
   return (
@@ -66,7 +66,8 @@ const UpdateProfile = () => {
   };
 
   const _handleSubmit = values => {
-    dispatch(updateProfileData(user.id, values, showToast));
+    const data = { ...values, contactNo: "+" + values.contactNo };
+    dispatch(updateProfileData(user.id, data, showToast));
   };
 
   useEffect(() => {
@@ -132,6 +133,7 @@ const UpdateProfile = () => {
             values,
             errors,
             touched,
+            setFieldValue,
           }) => (
             <>
               <TextInput
@@ -169,9 +171,35 @@ const UpdateProfile = () => {
                 underlineColor="#000"
                 selectionColor="#000"
                 error={errors.contactNo && touched.contactNo}
-                onChangeText={handleChange("contactNo")}
                 onBlur={handleBlur("contactNo")}
                 value={values.contactNo}
+                render={props => (
+                  <MaskInput
+                    {...props}
+                    onChangeText={(_, unmasked) =>
+                      setFieldValue("contactNo", unmasked)
+                    }
+                    mask={[
+                      "(",
+                      /\d/, // that's because I want it to be a digit (0-9)
+                      /\d/,
+                      ")",
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                    ]}
+                  />
+                )}
               />
               {errors.contactNo && (
                 <Text style={styles.errorText}>

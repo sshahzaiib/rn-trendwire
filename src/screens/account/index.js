@@ -22,7 +22,7 @@ const Account = ({ navigation }) => {
   const user = useSelector(state => state.auth.credentials?.user);
 
   const handleLogout = () => dispatch(logout({ refreshToken }, navigation));
-  const handleNavigate = path => console.log(path);
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -44,14 +44,7 @@ const Account = ({ navigation }) => {
               title="Update Profile"
               onPress={() => navigate("UpdateProfile")}
             />
-            <ListItem
-              title="My Orders"
-              onPress={() => handleNavigate("MyOrders")}
-            />
-            <ListItem
-              title="My Reviews"
-              onPress={() => handleNavigate("MyReviews")}
-            />
+            <ListItem title="My Orders" onPress={() => navigate("MyOrders")} />
             <ListItem
               disabled={!user?.isEmailVerified}
               description={
