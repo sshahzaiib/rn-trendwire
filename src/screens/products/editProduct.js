@@ -1,5 +1,3 @@
-/* eslint-disable react-native/split-platform-components */
-/* eslint-disable no-extra-boolean-cast */
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import React, { useCallback, useState } from "react";
@@ -51,8 +49,12 @@ const validationSchema = Yup.object().shape({
   title: Yup.string().required("Required").label("Title").max(40),
   description: Yup.string().required("Required").label("Description"),
   category: Yup.string().required("Required").label("Category"),
-  price: Yup.number().integer().required("Required").label("Price"),
-  discount: Yup.number().integer().required("Required").label("Discount"),
+  price: Yup.number().integer().required("Required").label("Price").min(1),
+  discount: Yup.number()
+    .integer()
+    .required("Required")
+    .label("Discount")
+    .min(10),
   tags: Yup.string().required("Required").label("Tags"),
 });
 

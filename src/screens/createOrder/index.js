@@ -11,6 +11,7 @@ import {
   ToastAndroid,
   View,
 } from "react-native";
+import MaskInput from "react-native-mask-input";
 import { Button, Headline, Subheading } from "react-native-paper";
 import {
   heightPercentageToDP as hp,
@@ -84,9 +85,10 @@ const CreateOrder = ({ navigation }) => {
       await createOrder({
         data: Object.assign(v, {
           vendor: vendorId,
-          status: "accepted",
+          status: "delivered",
           product: data.product,
           price: discountedPrice * v.quantity,
+          user: data.user,
         }),
       });
       showToast();
@@ -160,6 +162,7 @@ const CreateOrder = ({ navigation }) => {
             values,
             errors,
             touched,
+            setFieldValue,
           }) => (
             <>
               <CustomTextField
@@ -172,9 +175,35 @@ const CreateOrder = ({ navigation }) => {
               <CustomTextField
                 label="Contact No"
                 error={!!errors.contactNo && touched.contactNo}
-                onChangeText={handleChange("contactNo")}
                 onBlur={handleBlur("contactNo")}
                 value={values.contactNo}
+                render={props => (
+                  <MaskInput
+                    {...props}
+                    onChangeText={(_, unmasked) =>
+                      setFieldValue("contactNo", unmasked)
+                    }
+                    mask={[
+                      "(",
+                      /\d/, // that's because I want it to be a digit (0-9)
+                      /\d/,
+                      ")",
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      " ",
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                    ]}
+                  />
+                )}
               />
               <CustomTextField
                 label="Email"
