@@ -15,7 +15,7 @@ const MyOrders = () => {
     {
       url: "/order/my-orders",
       params: {
-        sortBy: "name:asc",
+        sortBy: "updatedAt:desc",
         limit: 100,
         user: userId,
         populate: "product",

@@ -7,7 +7,7 @@ import CustomTextField from "../../components/CustomTextField";
 import { useUserIdSelector } from "../../redux/selectors";
 import { http } from "../../utils/config";
 
-const SubmitReview = ({ productId, orderId, refetch }) => {
+const SubmitReview = ({ productId, orderId, refetch, ...rest }) => {
   const [visible, setVisible] = React.useState(false);
   const [rating, setRating] = React.useState(0);
   const [body, setBody] = React.useState("");
@@ -38,7 +38,7 @@ const SubmitReview = ({ productId, orderId, refetch }) => {
   };
   return (
     <View>
-      <Button onPress={showDialog} mode="contained">
+      <Button onPress={showDialog} {...rest} mode="contained">
         Submit Review
       </Button>
       <Portal>
